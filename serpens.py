@@ -4,6 +4,11 @@ import random
 
 body = []
 
+r_edge = 290
+l_edge = -290
+u_edge = 165
+d_edge = -190
+
 
 # Setting up the screen
 win = turtle.Screen()
@@ -90,26 +95,64 @@ def reset():
 
 
 def check_collisions():
-	if head.xcor() > 280 or head.xcor() < -280 or head.ycor() > 180 or head.ycor() < -180:
+	if head.xcor() > r_edge or head.xcor() < l_edge or head.ycor() > u_edge or head.ycor() < d_edge:
 		reset()
 
 	for part in body:
 		if head.distance(part) < 15:
 			reset()
 
+# Scoring
+pen = turtle.Turtle()
+pen.color("black")
+pen.shapesize(1)
+pen.speed(0)
+pen.penup()
+pen.hideturtle()
+pen.pensize(1)
+pen.goto(0,170)
+
+
+def scoreboard():
+	pen.clear()
+	score = len(body)*10
+	pen.write("Score:" + str(score), False, align="center", font=("Roboto", 15, "normal"))
+
+# Drawing border
+pen2 = turtle.Turtle()
+pen2.color("black")
+pen2.shapesize(1)
+pen2.speed(0)
+pen2.hideturtle()
+pen2.pensize(2)
+pen2.penup()
+pen2.goto(l_edge, u_edge)
+pen2.pendown()
+
+def draw_border():
+	pen2.goto(r_edge,u_edge)
+	pen2.goto(r_edge, d_edge)
+	pen2.goto(l_edge, d_edge)
+	pen2.goto(l_edge, u_edge)
+
 
 # Main loop
 while True:
+
+	scoreboard()
+
+	draw_border()
+
 	#Serpent eating food
 	if head.distance(food) < 15:
-		x = random.randint(-280, +280)
-		y = random.randint(-180, +180)
+		x = random.randint(l_edge + 20, r_edge - 20)
+		y = random.randint(d_edge + 20, u_edge -20)
 		food.goto(x,y)
 
 		#Add a new part
 		part = turtle.Turtle()
 		part.penup()
-		part.speed(0)
+		part.speed(5)
 		part.shape("square")
 		part.color("grey")
 		part.direction = "stop"
@@ -122,6 +165,7 @@ while True:
 
 	check_collisions()
 	
+
 
 	win.update()
 	time.sleep(0.05)
