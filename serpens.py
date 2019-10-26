@@ -20,9 +20,9 @@ head.speed(0)
 head.penup()
 head.goto(0,0)
 head.direction = "stop"
-body.append(head)
 
-#Creating serpent food
+
+# Creating serpent food
 food = turtle.Turtle()
 food.shape("circle")
 food.color("red")
@@ -33,7 +33,7 @@ food.goto(random.randint(-280, +280),random.randint(-180, +180))
 food.direction = "stop"
 
 # Head movement
-def move():
+def head_move():
 	x = 0
 	y = 0
 	if head.direction == "up":
@@ -48,6 +48,7 @@ def move():
 	if head.direction == "right":
 		x = head.xcor()
 		head.setx(x + 15)
+
 
 def goup():
 	if head.direction != "down":
@@ -69,6 +70,27 @@ win.onkeypress(goleft, "Left")
 win.onkeypress(goright, "Right")
 
 
+# Body movement
+def body_move():
+	for index in range(len(body)-1,0,-1):
+		body[index].setx(body[index-1].xcor())
+		body[index].sety(body[index-1].ycor())
+	if len(body) > 0:	
+		body[0].setx(head.xcor())
+		body[0].sety(head.ycor())
+
+
+def check_collisions():
+	if head.xcor() > 280 or head.xcor() < -280 or head.ycor() > 180 or head.ycor() < -180:
+		head.direction = "stop"
+		#reset()
+
+	for part in body:
+		if head.distance(part) < 15:
+			head.direction = "stop"
+			#reset()
+
+
 # Main loop
 while True:
 	#Serpent eating food
@@ -85,14 +107,15 @@ while True:
 		part.color("grey")
 		part.direction = "stop"
 		body.append(part)
-		
-	#Body movement
-	for index in range(len(body)-1,0,-1):
-		body[index].setx(body[index-1].xcor())
-		body[index].sety(body[index-1].ycor())
 
+	
+	body_move()
+	
+	head_move()
 
-	move()
+	check_collisions()
+	
+
 	win.update()
 	time.sleep(0.05)
 
