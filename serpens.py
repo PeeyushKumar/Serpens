@@ -80,15 +80,22 @@ def body_move():
 		body[0].sety(head.ycor())
 
 
+# Collision behaviour
+def reset():
+	head.direction = "stop"
+	head.goto(0,0)
+	for index in range(len(body)):
+		body[index].goto(10000,10000)
+	body.clear()
+
+
 def check_collisions():
 	if head.xcor() > 280 or head.xcor() < -280 or head.ycor() > 180 or head.ycor() < -180:
-		head.direction = "stop"
-		#reset()
+		reset()
 
 	for part in body:
 		if head.distance(part) < 15:
-			head.direction = "stop"
-			#reset()
+			reset()
 
 
 # Main loop
