@@ -1,9 +1,10 @@
 import turtle
 import time
+import random
 
 # Setting up the screen
 win = turtle.Screen()
-win.setup()
+win.setup(width=600, height=400)
 win.title("Serpens")
 win.tracer(0)
 
@@ -16,6 +17,16 @@ head.speed(0)
 head.penup()
 head.goto(0,0)
 head.direction = "stop"
+
+#Creating serpent food
+food = turtle.Turtle()
+food.shape("circle")
+food.color("red")
+food.shapesize(1)
+food.speed(0)
+food.penup()
+food.goto(0,0)
+food.direction = "stop"
 
 # Head movement
 def move():
@@ -56,8 +67,15 @@ win.onkeypress(goright, "Right")
 
 # Main loop
 while True:
+	#Serpent eating food
+	if head.distance(food) < 20:
+		x = random.randint(-280, +280)
+		y = random.randint(-180, +180)
+		food.goto(x,y)
+
+
+	move()
 	win.update()
 	time.sleep(0.03)
-	move()
 
 turtle.mainloop()
