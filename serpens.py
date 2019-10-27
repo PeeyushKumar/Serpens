@@ -3,6 +3,7 @@ import time
 import random
 import math
 
+#Variables
 width = 600
 height = 400
 
@@ -21,6 +22,7 @@ speed = 10
 snake = []
 
 
+#Snake blocks class
 class cube:
 	def __init__(self, color):
 		self.color = color
@@ -37,6 +39,7 @@ class cube:
 		pygame.draw.rect(win, self.color, (self.corx,self.cory,cube_size,cube_size))
 
 
+#Food class
 class create_food:
 	def __init__(self, color):
 		self.corx = random.randint(l_edge, r_edge - cube_size)
@@ -51,6 +54,7 @@ class create_food:
 		self.cory = random.randint(u_edge, d_edge - cube_size)
 
 
+#Movement
 def head_move():
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
@@ -58,13 +62,13 @@ def head_move():
 		keys = pygame.key.get_pressed()
 
 		for key in keys:
-			if keys[pygame.K_UP]:
+			if keys[pygame.K_UP] and head.direction != "down":
 				head.direction = "up"
-			if keys[pygame.K_DOWN]:
+			if keys[pygame.K_DOWN] and head.direction != "up":
 				head.direction = "down"
-			if keys[pygame.K_LEFT]:
+			if keys[pygame.K_LEFT] and head.direction != "right":
 				head.direction = "left"
-			if keys[pygame.K_RIGHT]:
+			if keys[pygame.K_RIGHT] and head.direction != "left":
 				head.direction = "right"
 
 	if head.direction == "up":
@@ -76,20 +80,21 @@ def head_move():
 	if head.direction == "right":
 		head.move(head.corx + speed, head.cory)
 
-
 def body_move():
 	for index in range(len(snake)-1,0,-1):
 		snake[index].move(snake[index-1].corx, snake[index-1].cory)
 	if len(snake) > 0:
 		snake[0].move(head.corx, head.cory)
-		
 
+		
+#Draw serpent
 def draw_snake():
 	for part in snake:
 		part.draw()
 	head.draw()
 
 
+#Food collision
 def eat():
 	food.draw()
 	if math.sqrt( ((food.corx - head.corx)**2)+((food.cory - head.cory)**2) ) < cube_size:
@@ -100,13 +105,13 @@ def eat():
 		snake.append(part)
 
 
+#Collision
 def reset():
 	head.direction = "stop"
 	time.sleep(1)
 	for index in range(len(snake)):
 		del snake[0]
 	head.move((width + cube_size)/2, (height + cube_size)/2)
-
 
 def check_collision():
 	if head.corx == l_edge or head.corx == r_edge-cube_size:	
@@ -118,20 +123,22 @@ def check_collision():
 		pass
 
 	else:
-		for index in range(2, len(snake)):
+		for index in range(0, len(snake)):
 			if math.sqrt(((snake[index].corx - head.corx)**2)+((snake[index].cory - head.cory)**2) ) < cube_size/2:
 				reset()
 				break
 
 
+#Game window
 pygame.init()
 
 win = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Serpens")
-
 head = cube(black)
 food = create_food(red)
 
+
+#Game loop
 run = True
 while run:
 	win.fill(white)
