@@ -73,7 +73,6 @@ def check_collision():
 
 
 
-
 pygame.init()
 
 win = pygame.display.set_mode((width, height))
