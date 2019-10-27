@@ -5,6 +5,11 @@ import time
 width = 600
 height = 400
 
+l_edge = 0
+r_edge = width
+u_edge = 0
+d_edge = height
+
 white = (255,255,255)
 black = (0,0,0)
 
@@ -55,6 +60,18 @@ def head_move():
 		head.move(head.corx + speed, head.cory)
 
 
+def check_collision():
+	if head.corx == l_edge or head.corx == r_edge-cube_size:
+		head.direction = "stop"
+		print("collision")
+		#reset()
+
+	if head.cory == u_edge or head.cory == d_edge-cube_size:
+		head.direction = "stop"
+		print("collision")
+		#reset()
+
+
 
 
 pygame.init()
@@ -71,5 +88,6 @@ run = True
 while run:
 	head_move()
 	pygame.display.update()
+	check_collision()
 	time.sleep(0.03)
 	
