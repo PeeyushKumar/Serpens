@@ -5,8 +5,8 @@ import random
 #Variables
 body = []
 
-width = 800
-height = 600
+width = 600
+height = 400
 
 r_edge = width/2 - 10
 l_edge = width*(-1)/2 +10
@@ -122,6 +122,7 @@ def body_move():
 
 #Collision behaviour
 def reset():
+	time.sleep(1)
 	head.direction = "stop"
 	head.goto(0,0)
 	for index in range(len(body)):
