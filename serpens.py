@@ -15,10 +15,15 @@ d_edge = height
 white = (255,255,255)
 black = (0,0,0)
 red = (255,0,0)
-grey = (211,211,211)
+grey = (200,200,200)
+
+green = (0, 255, 0) 
+blue = (0, 0, 128) 
+
 
 cube_size = 20
 speed = 10
+
 snake = []
 
 
@@ -59,6 +64,7 @@ def head_move():
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			pygame.quit()
+			exit()
 		keys = pygame.key.get_pressed()
 
 		for key in keys:
@@ -97,7 +103,7 @@ def draw_snake():
 #Food collision
 def eat():
 	food.draw()
-	if math.sqrt( ((food.corx - head.corx)**2)+((food.cory - head.cory)**2) ) < cube_size:
+	if math.sqrt(((food.corx - head.corx)**2)+((food.cory - head.cory)**2)) < cube_size:
 		food.jump()
 		food.draw()
 
@@ -108,25 +114,35 @@ def eat():
 #Collision
 def reset():
 	head.direction = "stop"
-	time.sleep(1)
+	calc_score()
 	for index in range(len(snake)):
 		del snake[0]
 	head.move((width + cube_size)/2, (height + cube_size)/2)
+	food.jump()
+	time.sleep(2)
 
 def check_collision():
 	if head.corx == l_edge or head.corx == r_edge-cube_size:	
 		reset()
-		pass
 
 	elif head.cory == u_edge or head.cory == d_edge-cube_size:
 		reset()
-		pass
 
 	else:
 		for index in range(0, len(snake)):
-			if math.sqrt(((snake[index].corx - head.corx)**2)+((snake[index].cory - head.cory)**2) ) < cube_size/2:
+			if math.sqrt(((snake[index].corx - head.corx)**2)+((snake[index].cory - head.cory)**2)) < cube_size/2:
 				reset()
 				break
+
+#Scoring
+def calc_score():
+	score = len(snake)*10
+	font = pygame.font.Font('freesansbold.ttf', 32) 
+	text = font.render("Score: "+str(score), True, black, white) 
+	textRect = text.get_rect()  
+	textRect.center = (width // 2, height // 2)
+	win.blit(text, textRect)
+	pygame.display.update()
 
 
 #Game window
@@ -136,6 +152,7 @@ win = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Serpens")
 head = cube(black)
 food = create_food(red)
+
 
 
 #Game loop
