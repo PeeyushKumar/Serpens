@@ -2,6 +2,8 @@ import pygame
 import time
 import random
 import math
+import os
+import pickle
 
 #Variables
 width = 600
@@ -12,18 +14,13 @@ r_edge = width
 u_edge = 0
 d_edge = height
 
-white = (255,255,255)
+white = (225,225,225)
 black = (0,0,0)
 red = (255,0,0)
-grey = (200,200,200)
-
-green = (0, 255, 0) 
-blue = (0, 0, 128) 
-
+grey = (175,175,175)
 
 cube_size = 20
 speed = 10
-
 snake = []
 
 
@@ -76,6 +73,10 @@ def head_move():
 				head.direction = "left"
 			if keys[pygame.K_RIGHT] and head.direction != "left":
 				head.direction = "right"
+			if keys[pygame.K_r]:
+				hi_score = 0
+				with open("data", "wb") as file:
+					pickle.dump(hi_score, file)
 
 	if head.direction == "up":
 		head.move(head.corx, head.cory - speed)
@@ -111,6 +112,36 @@ def eat():
 		snake.append(part)
 
 
+#Scoring
+def calc_score():
+	score = len(snake)*10
+
+	font = pygame.font.Font('freesansbold.ttf', 32)
+
+	text= font.render("Score: " + str(score), True, black, white) 
+	textRect = text.get_rect()  
+	textRect.center = (width // 2, height // 2)
+	win.blit(text, textRect)
+
+	if os.path.isfile("data"):
+		with open("data", "rb") as file:
+			hi_score = pickle.load(file)
+		if score > hi_score:
+			hi_score = score
+			with open("data", "wb") as file:
+				pickle.dump(hi_score, file)
+			text = font.render("New Highscore", True, black, white)
+			textRect = text.get_rect() 
+			textRect.center = (width // 2, height // 2 + 50)
+			win.blit(text, textRect)
+	else:
+		hi_score = score
+		with open("data", "wb") as file:
+			pickle.dump(hi_score, file)
+	
+	pygame.display.update()
+
+
 #Collision
 def reset():
 	head.direction = "stop"
@@ -120,6 +151,7 @@ def reset():
 	head.move((width + cube_size)/2, (height + cube_size)/2)
 	food.jump()
 	time.sleep(2)
+
 
 def check_collision():
 	if head.corx == l_edge or head.corx == r_edge-cube_size:	
@@ -134,15 +166,6 @@ def check_collision():
 				reset()
 				break
 
-#Scoring
-def calc_score():
-	score = len(snake)*10
-	font = pygame.font.Font('freesansbold.ttf', 32) 
-	text = font.render("Score: "+str(score), True, black, white) 
-	textRect = text.get_rect()  
-	textRect.center = (width // 2, height // 2)
-	win.blit(text, textRect)
-	pygame.display.update()
 
 
 #Game window
