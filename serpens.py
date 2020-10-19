@@ -14,10 +14,11 @@ r_edge = width
 u_edge = 0
 d_edge = height
 
-white = (225,225,225)
-black = (0,0,0)
-red = (255,0,0)
-grey = (175,175,175)
+fontColor = (0,0,0)
+bgColor = (155,164,180)
+headColor = (20,39,78)
+foodColor = (106,9,125)
+bodyColor = (57,72,103)
 
 cube_size = 20
 speed = 10
@@ -108,7 +109,7 @@ def eat():
 		food.jump()
 		food.draw()
 
-		part = cube(grey)
+		part = cube(bodyColor)
 		snake.append(part)
 
 
@@ -118,7 +119,7 @@ def calc_score():
 
 	font = pygame.font.Font('freesansbold.ttf', 32)
 
-	text= font.render("Score: " + str(score), True, black, white) 
+	text= font.render("Score: " + str(score), True, fontColor, bgColor) 
 	textRect = text.get_rect()  
 	textRect.center = (width // 2, height // 2)
 	win.blit(text, textRect)
@@ -130,7 +131,7 @@ def calc_score():
 			hi_score = score
 			with open("data", "wb") as file:
 				pickle.dump(hi_score, file)
-			text = font.render("New Highscore", True, black, white)
+			text = font.render("New Highscore", True, fontColor, bgColor)
 			textRect = text.get_rect() 
 			textRect.center = (width // 2, height // 2 + 50)
 			win.blit(text, textRect)
@@ -173,15 +174,15 @@ pygame.init()
 
 win = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Serpens")
-head = cube(black)
-food = create_food(red)
+head = cube(headColor)
+food = create_food(foodColor)
 
 
 
 #Game loop
 run = True
 while run:
-	win.fill(white)
+	win.fill(bgColor)
 	eat()
 	body_move()
 	head_move()
